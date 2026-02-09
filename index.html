@@ -59,10 +59,35 @@ button:active { transform: scale(0.95); }
 
 img {
   width: 100%;
-  max-width: 320px;
   height: auto;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Photos layout */
+#photos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+#photos img {
+  width: calc(33% - 12px);
+  max-width: 200px;
+}
+
+@media (max-width: 800px) {
+  #photos img {
+    width: 45%;
+  }
+}
+
+@media (max-width: 500px) {
+  #photos img {
+    width: 80%;
+  }
 }
 
 /* YES / NO background */
@@ -129,6 +154,14 @@ canvas.hearts {
     No matter the miles, my heart always finds yours.<br>
     You’re my favorite thought, my comfort, my smile.
   </p>
+
+  <!-- 3 Photos -->
+  <div id="photos">
+    <img src="photo1.jpeg" alt="Us 1" loading="lazy">
+    <img src="photo2.jpeg" alt="Us 2" loading="lazy">
+    <img src="photo3.jpeg" alt="Us 3" loading="lazy">
+  </div>
+
   <button onclick="showOnly('countdown')">One more thing 👀</button>
 </section>
 
