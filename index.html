@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Valentine 💕</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: #fff;
+  text-align: center;
+  overflow-x: hidden;
+  font-size: clamp(16px, 4vw, 20px);
+}
+
+section {
+  padding: 60px 20px;
+  animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden { display: none; }
+
+h1 { font-size: clamp(28px, 8vw, 42px); }
+h2 { font-size: clamp(22px, 6vw, 32px); }
+
+p {
+  line-height: 1.6;
+  max-width: 600px;
+  margin: auto;
+}
+
+button {
+  background: #ff4d6d;
+  border: none;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-size: clamp(16px, 4.5vw, 18px);
+  cursor: pointer;
+  margin: 16px;
+  width: min(80%, 280px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+button:active { transform: scale(0.95); }
+
+img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+#slideshow img {
+  display: none;
+  animation: fadeSlide 1s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* YES / NO background */
+#question {
+  background:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("question-bg.jpg") center / cover no-repeat;
+  min-height: 100vh;
+}
+
+#question h1 {
+  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+#final h1 {
+  animation: pop 0.8s ease infinite alternate;
+}
+
+@keyframes pop {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+canvas.hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@media (max-width: 600px) {
+  canvas.hearts { opacity: 0.5; }
+}
+</style>
+</head>
+
+<body>
+
+<canvas class="hearts"></canvas>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="yesMusic">
+  <source src="yes-music.mp3" type="audio/mpeg">
+</audio>
+
+<button onclick="toggleMusic(event)">🎵 Music</button>
+
+<!-- LANDING -->
+<section id="landing">
+  <h1>Hey my love 💕</h1>
+  <p>I made something just for you…</p>
+  <button onclick="showOnly('letter')">Click me 😄</button>
+</section>
+
+<!-- LETTER -->
+<section id="letter" class="hidden">
+  <h2>My Love Letter 🌹</h2>
+  <p>
+    Being far from you isn’t easy,<br>
+    but loving you is the easiest thing I’ve ever done.<br>
+    No matter the miles, my heart always finds yours.<br>
+    You’re my favorite thought, my comfort, my smile.
+  </p>
+  <button onclick="showSlideshow()">Keep going 💖</button>
+</section>
+
+<!-- SLIDESHOW -->
+<section id="slideshow" class="hidden">
+  <h2>Us 🥹</h2>
+  <img src="photo1.jpg" loading="lazy">
+  <img src="photo2.jpg" loading="lazy">
+  <img src="photo3.jpg" loading="lazy">
+  <button onclick="showOnly('countdown')">One more thing 👀</button>
+</section>
+
+<!-- COUNTDOWN -->
+<section id="countdown" class="hidden">
+  <h2>Until Valentine’s Day 💘</h2>
+  <h1 id="timer"></h1>
+  <button onclick="showOnly('question')">Ready? 💞</button>
+</section>
+
+<!-- QUESTION -->
+<section id="question" class="hidden">
+  <h1>Will you be my Valentine? 💌</h1>
+  <button onclick="yesAnswer()">YES 💖</button>
+  <button onmouseover="moveButton(this)">NO 😏</button>
+</section>
+
+<!-- FINAL -->
+<section id="final" class="hidden">
+  <h1>YAY!!! 🎉💘</h1>
+  <p>I love you more than distance can handle 😌</p>
+</section>
+
+<script>
+function showOnly(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+const music = document.getElementById("music");
+const yesMusic = document.getElementById("yesMusic");
+
+function toggleMusic(e) {
+  if (music.paused) {
+    music.play();
+    e.target.innerText = "⏸ Pause Music";
+  } else {
+    music.pause();
+    e.target.innerText = "🎵 Music";
+  }
+}
+
+let slideshowStarted = false;
+function showSlideshow() {
+  showOnly("slideshow");
+  if (slideshowStarted) return;
+  slideshowStarted = true;
+
+  let slides = document.querySelectorAll("#slideshow img");
+  let i = 0;
+  slides[i].style.display = "block";
+
+  setInterval(() => {
+    slides[i].style.display = "none";
+    i = (i + 1) % slides.length;
+    slides[i].style.display = "block";
+  }, 2500);
+}
+
+function yesAnswer() {
+  music.pause();
+  music.currentTime = 0;
+  yesMusic.play();
+  showOnly("final");
+}
+
+function moveButton(btn) {
+  btn.style.position = "absolute";
+  btn.style.top = Math.random() * 80 + "%";
+  btn.style.left = Math.random() * 80 + "%";
+}
+
+const valentinesDay = new Date("Feb 14, 2026 00:00:00").getTime();
+setInterval(() => {
+  const now = new Date().getTime();
+  const distance = valentinesDay - now;
+  const timer = document.getElementById("timer");
+
+  if (distance <= 0) {
+    timer.innerHTML = "It’s TODAY 💘";
+    return;
+  }
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  timer.innerHTML = days + " days 💕";
+}, 1000);
+
+/* Floating hearts */
+const canvas = document.querySelector(".hearts");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const hearts = [];
+function createHeart() {
+  hearts.push({
+    x: Math.random() * canvas.width,
+    y: canvas.height + 20,
+    size: Math.random() * 20 + 10,
+    speed: Math.random() * 1 + 0.5,
+    opacity: Math.random()
+  });
+}
+
+function drawHearts() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  hearts.forEach((h, i) => {
+    ctx.globalAlpha = h.opacity;
+    ctx.font = `${h.size}px Arial`;
+    ctx.fillText("💖", h.x, h.y);
+    h.y -= h.speed;
+    if (h.y < -50) hearts.splice(i, 1);
+  });
+  requestAnimationFrame(drawHearts);
+}
+
+setInterval(createHeart, 300);
+drawHearts();
+</script>
+
+</body>
+</html>
