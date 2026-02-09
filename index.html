@@ -6,19 +6,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* SINGLE BACKGROUND */
 body {
   margin: 0;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  background:
+    linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+    url("background.jpeg") center / cover no-repeat;
   color: #fff;
   text-align: center;
   overflow-x: hidden;
   font-size: clamp(16px, 4vw, 20px);
+  min-height: 100vh;
+  transition: background 0.8s ease;
+}
+
+/* Permanent background for question and onward */
+body.question-bg {
+  background:
+    linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+    url("question-bg.jpeg") center / cover no-repeat;
 }
 
 section {
   padding: 60px 20px;
   animation: fadeUp 1s ease forwards;
+  min-height: 100vh;
 }
 
 @keyframes fadeUp {
@@ -28,14 +41,9 @@ section {
 
 .hidden { display: none; }
 
-h1 { font-size: clamp(28px, 8vw, 42px); }
-h2 { font-size: clamp(22px, 6vw, 32px); }
-
-p {
-  line-height: 1.6;
-  max-width: 600px;
-  margin: auto;
-}
+h1 { font-size: clamp(28px, 8vw, 42px); text-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+h2 { font-size: clamp(22px, 6vw, 32px); text-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+p { line-height: 1.6; max-width: 600px; margin: auto; text-shadow: 0 3px 8px rgba(0,0,0,0.5); }
 
 button {
   background: #ff4d6d;
@@ -57,49 +65,19 @@ button:hover {
 
 button:active { transform: scale(0.95); }
 
-img {
-  width: 100%;
+#slideshow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* Keep images in a line */
+  gap: 16px;
+  flex-wrap: wrap; /* fallback for mobile */
+}
+
+#slideshow img {
+  width: 30%; /* 3 images side by side */
   height: auto;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-}
-
-/* Photos layout */
-#photos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 20px;
-}
-
-#photos img {
-  width: calc(33% - 12px);
-  max-width: 200px;
-}
-
-@media (max-width: 800px) {
-  #photos img {
-    width: 45%;
-  }
-}
-
-@media (max-width: 500px) {
-  #photos img {
-    width: 80%;
-  }
-}
-
-/* YES / NO background */
-#question {
-  background:
-    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-    url("question-bg.jpeg") center / cover no-repeat;
-  min-height: 100vh;
-}
-
-#question h1 {
-  text-shadow: 0 4px 12px rgba(0,0,0,0.7);
 }
 
 #final h1 {
@@ -119,7 +97,8 @@ canvas.hearts {
   z-index: -1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
+  #slideshow img { width: 80%; margin-bottom: 16px; }
   canvas.hearts { opacity: 0.5; }
 }
 </style>
@@ -130,7 +109,7 @@ canvas.hearts {
 <canvas class="hearts"></canvas>
 
 <!-- MUSIC -->
-<audio id="music" loop>
+<audio id="music" loop autoplay>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -154,14 +133,15 @@ canvas.hearts {
     No matter the miles, my heart always finds yours.<br>
     You’re my favorite thought, my comfort, my smile.
   </p>
+  <button onclick="showOnly('slideshow')">Keep going 💖</button>
+</section>
 
-  <!-- 3 Photos -->
-  <div id="photos">
-    <img src="photo1.jpeg" alt="Us 1" loading="lazy">
-    <img src="photo2.jpeg" alt="Us 2" loading="lazy">
-    <img src="photo3.jpeg" alt="Us 3" loading="lazy">
-  </div>
-
+<!-- SLIDESHOW -->
+<section id="slideshow" class="hidden">
+  <h2>Us 🥹</h2>
+  <img src="photo1.jpeg" loading="lazy" alt="Photo 1">
+  <img src="photo2.jpeg" loading="lazy" alt="Photo 2">
+  <img src="photo3.jpeg" loading="lazy" alt="Photo 3">
   <button onclick="showOnly('countdown')">One more thing 👀</button>
 </section>
 
@@ -181,7 +161,7 @@ canvas.hearts {
 
 <!-- FINAL -->
 <section id="final" class="hidden">
-  <h1>YAY!!! 🎉💘</h1>
+  <h1>YAY Bakku I love you too !!! 🎉💘</h1>
   <p>I love you more than distance can handle 😌</p>
 </section>
 
@@ -189,27 +169,27 @@ canvas.hearts {
 function showOnly(id) {
   document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
+
+  // Once question is shown, keep background permanently
+  if (id === "question") {
+    document.body.classList.add("question-bg");
+  }
 }
 
 const music = document.getElementById("music");
 const yesMusic = document.getElementById("yesMusic");
 
-// Autoplay main music on page load
+// Autoplay music with fallback
 window.addEventListener("load", () => {
   music.play().catch(() => {
-    console.log("Autoplay blocked; user may need to interact to start music.");
+    document.body.addEventListener("click", () => music.play(), { once: true });
   });
 });
 
 function yesAnswer() {
-  // Stop main music
   music.pause();
   music.currentTime = 0;
-
-  // Play YES music
   yesMusic.play();
-
-  // Show final section
   showOnly("final");
 }
 
@@ -265,6 +245,12 @@ function drawHearts() {
 
 setInterval(createHeart, 300);
 drawHearts();
+
+// Resize canvas on window resize
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 </script>
 
 </body>
