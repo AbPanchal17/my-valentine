@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* SINGLE BACKGROUND */
+/* FULL PAGE BACKGROUND */
 body {
   margin: 0;
   font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -21,7 +21,7 @@ body {
   transition: background 0.8s ease;
 }
 
-/* Permanent background for question and onward */
+/* PERMANENT QUESTION BACKGROUND */
 body.question-bg {
   background:
     linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
@@ -65,16 +65,18 @@ button:hover {
 
 button:active { transform: scale(0.95); }
 
+/* SLIDESHOW LAYOUT */
 #slideshow {
   display: flex;
   justify-content: center;
-  flex-wrap: nowrap; /* Keep images in a line */
   gap: 16px;
-  flex-wrap: wrap; /* fallback for mobile */
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 #slideshow img {
-  width: 30%; /* 3 images side by side */
+  width: 30%; /* 3 images in a row */
+  min-width: 200px;
   height: auto;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -97,7 +99,7 @@ canvas.hearts {
   z-index: -1;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   #slideshow img { width: 80%; margin-bottom: 16px; }
   canvas.hearts { opacity: 0.5; }
 }
