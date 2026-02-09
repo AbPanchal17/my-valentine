@@ -65,16 +65,6 @@ img {
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-#slideshow img {
-  display: none;
-  animation: fadeSlide 1s ease;
-}
-
-@keyframes fadeSlide {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 /* YES / NO background */
 #question {
   background:
@@ -123,8 +113,6 @@ canvas.hearts {
   <source src="yes-music.mp3" type="audio/mpeg">
 </audio>
 
-<button onclick="toggleMusic(event)">🎵 Music</button>
-
 <!-- LANDING -->
 <section id="landing">
   <h1>Hey my love 💕</h1>
@@ -141,15 +129,6 @@ canvas.hearts {
     No matter the miles, my heart always finds yours.<br>
     You’re my favorite thought, my comfort, my smile.
   </p>
-  <button onclick="showSlideshow()">Keep going 💖</button>
-</section>
-
-<!-- SLIDESHOW -->
-<section id="slideshow" class="hidden">
-  <h2>Us 🥹</h2>
-  <img src="photo1.jpg" loading="lazy">
-  <img src="photo2.jpg" loading="lazy">
-  <img src="photo3.jpg" loading="lazy">
   <button onclick="showOnly('countdown')">One more thing 👀</button>
 </section>
 
@@ -182,37 +161,22 @@ function showOnly(id) {
 const music = document.getElementById("music");
 const yesMusic = document.getElementById("yesMusic");
 
-function toggleMusic(e) {
-  if (music.paused) {
-    music.play();
-    e.target.innerText = "⏸ Pause Music";
-  } else {
-    music.pause();
-    e.target.innerText = "🎵 Music";
-  }
-}
-
-let slideshowStarted = false;
-function showSlideshow() {
-  showOnly("slideshow");
-  if (slideshowStarted) return;
-  slideshowStarted = true;
-
-  let slides = document.querySelectorAll("#slideshow img");
-  let i = 0;
-  slides[i].style.display = "block";
-
-  setInterval(() => {
-    slides[i].style.display = "none";
-    i = (i + 1) % slides.length;
-    slides[i].style.display = "block";
-  }, 2500);
-}
+// Autoplay main music on page load
+window.addEventListener("load", () => {
+  music.play().catch(() => {
+    console.log("Autoplay blocked; user may need to interact to start music.");
+  });
+});
 
 function yesAnswer() {
+  // Stop main music
   music.pause();
   music.currentTime = 0;
+
+  // Play YES music
   yesMusic.play();
+
+  // Show final section
   showOnly("final");
 }
 
@@ -272,4 +236,3 @@ drawHearts();
 
 </body>
 </html>
-
