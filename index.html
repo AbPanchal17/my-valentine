@@ -72,7 +72,7 @@ button:hover {
 button:active { transform: scale(0.95); }
 
 /* SLIDESHOW LAYOUT */
-#slideshow {
+#photos {
   display: flex;
   justify-content: center;
   gap: 16px;
@@ -80,12 +80,16 @@ button:active { transform: scale(0.95); }
   margin-top: 20px;
 }
 
-#slideshow img {
-  width: 30%; /* 3 images in a row */
+#photos img {
+  width: 30%;
   min-width: 200px;
   height: auto;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 900px) {
+  #photos img { width: 80%; margin-bottom: 16px; }
 }
 
 #final h1 {
@@ -103,11 +107,6 @@ canvas.hearts {
   left: 0;
   pointer-events: none;
   z-index: -1;
-}
-
-@media (max-width: 900px) {
-  #slideshow img { width: 80%; margin-bottom: 16px; }
-  canvas.hearts { opacity: 0.5; }
 }
 </style>
 </head>
@@ -144,15 +143,17 @@ canvas.hearts {
     No matter the miles, my heart always finds yours.<br>
     You’re my favorite thought, my comfort, my smile.
   </p>
-  <button onclick="showOnly('slideshow')">Keep going 💖</button>
+  <button onclick="showSlideshow()">Keep going 💖</button>
 </section>
 
 <!-- SLIDESHOW -->
 <section id="slideshow" class="hidden">
-  <h2>Us 🥹</h2>
-  <img src="photo1.jpeg" loading="lazy" alt="Photo 1">
-  <img src="photo2.jpeg" loading="lazy" alt="Photo 2">
-  <img src="photo3.jpeg" loading="lazy" alt="Photo 3">
+  <h2 id="usTitle" class="hidden">Us 🥹</h2>
+  <div id="photos">
+    <img src="photo1.jpeg" loading="lazy" alt="Photo 1">
+    <img src="photo2.jpeg" loading="lazy" alt="Photo 2">
+    <img src="photo3.jpeg" loading="lazy" alt="Photo 3">
+  </div>
   <button onclick="showOnly('countdown')">One more thing 👀</button>
 </section>
 
@@ -196,6 +197,11 @@ window.addEventListener("load", () => {
   });
 });
 
+function showSlideshow() {
+  showOnly("slideshow"); // show section
+  document.getElementById("usTitle").classList.remove("hidden"); // show "Us" heading
+}
+
 function yesAnswer() {
   music.pause();
   music.currentTime = 0;
@@ -209,6 +215,7 @@ function moveButton(btn) {
   btn.style.left = Math.random() * 80 + "%";
 }
 
+// Countdown
 const valentinesDay = new Date("Feb 14, 2026 00:00:00").getTime();
 setInterval(() => {
   const now = new Date().getTime();
