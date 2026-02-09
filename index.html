@@ -6,26 +6,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* FULL PAGE BACKGROUND */
+/* FULL PAGE BACKGROUND DIV */
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('background.jpeg') center/cover no-repeat;
+  z-index: -2;
+  transition: background 0.8s ease;
+}
+
+/* PERMANENT QUESTION BACKGROUND */
+body.question-bg #bg {
+  background: url('question-bg.jpeg') center/cover no-repeat;
+}
+
+/* BODY AND TEXT */
 body {
   margin: 0;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
-    url("background.jpeg") center / cover no-repeat;
   color: #fff;
   text-align: center;
   overflow-x: hidden;
   font-size: clamp(16px, 4vw, 20px);
   min-height: 100vh;
-  transition: background 0.8s ease;
-}
-
-/* PERMANENT QUESTION BACKGROUND */
-body.question-bg {
-  background:
-    linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
-    url("question-bg.jpeg") center / cover no-repeat;
 }
 
 section {
@@ -108,6 +114,9 @@ canvas.hearts {
 
 <body>
 
+<!-- BACKGROUND DIV -->
+<div id="bg"></div>
+
 <canvas class="hearts"></canvas>
 
 <!-- MUSIC -->
@@ -172,7 +181,7 @@ function showOnly(id) {
   document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 
-  // Once question is shown, keep background permanently
+  // Keep question background permanent
   if (id === "question") {
     document.body.classList.add("question-bg");
   }
@@ -181,7 +190,6 @@ function showOnly(id) {
 const music = document.getElementById("music");
 const yesMusic = document.getElementById("yesMusic");
 
-// Autoplay music with fallback
 window.addEventListener("load", () => {
   music.play().catch(() => {
     document.body.addEventListener("click", () => music.play(), { once: true });
@@ -248,7 +256,6 @@ function drawHearts() {
 setInterval(createHeart, 300);
 drawHearts();
 
-// Resize canvas on window resize
 window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
